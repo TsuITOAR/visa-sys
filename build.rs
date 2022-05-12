@@ -6,7 +6,7 @@ fn main() {
         println!("cargo:rustc-link-lib=visa64");
         #[cfg(target_os = "windows")]
         {
-            let search_path = r#"C:\Program Files (x86)\IVI Foundation\VISA\Win64\Lib_x64\msc"#;
+            let search_path = r#"C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Lib_x64\msc"#;
             println!("cargo:rustc-link-search={}", search_path);
         }
     } else if cfg!(target_arch = "x86") {
