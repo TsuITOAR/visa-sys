@@ -12,4 +12,4 @@ exclude = ["/sample.rs", "/.vscode"]
 [dependencies]
 
 [build-dependencies]
-bindgen = "*"
+bindgen = "^0.59"
