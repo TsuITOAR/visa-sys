@@ -25,8 +25,6 @@ fn main() {
             .unwrap_or_else(|| eprintln!("WARN: illegal value of 'VISA_LIB_PATH'"));
     }
 
-    println!("cargo:rerun-if-changed=wrapper.h");
-
     let bindings = bindgen::Builder::default()
         .header("include/visa.h")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
