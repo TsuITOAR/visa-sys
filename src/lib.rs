@@ -1,7 +1,12 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+
+#[cfg(feature = "bindgen")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+#[cfg(not(feature = "bindgen"))]
+include!("./prebind/bindings.rs");
 
 #[cfg(test)]
 mod tests {
@@ -25,7 +30,7 @@ mod tests {
                 VI_SUCCESS as _,
                 "Could not open a session to the VISA Resource Manager!\n"
             );
-            let expr = std::ffi::CString::new(b"?*INSTR").unwrap();
+            let expr = std::ffi::CString::new(&b"?*INSTR"[..]).unwrap();
             assert_eq!(
                 viFindRsrc(
                     defaultRM,
