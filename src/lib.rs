@@ -30,7 +30,7 @@ mod tests {
                 VI_SUCCESS as _,
                 "Could not open a session to the VISA Resource Manager!\n"
             );
-            let expr = std::ffi::CString::new(b"?*INSTR").unwrap();
+            let expr = std::ffi::CString::new(*b"?*INSTR").unwrap();
             assert_eq!(
                 viFindRsrc(
                     defaultRM,
