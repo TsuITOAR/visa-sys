@@ -7,7 +7,7 @@ fn main() {
 
 use std::env;
 fn link_lib() {
-	let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let lib = if target_arch == "x86_64" {
         "visa64"
     } else if target_arch == "x86" {
