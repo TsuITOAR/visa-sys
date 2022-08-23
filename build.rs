@@ -7,12 +7,13 @@ fn main() {
 
 use std::env;
 fn link_lib() {
-    let lib = if cfg!(target_arch = "x86_64") {
+	let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    let lib = if target_arch == "x86_64" {
         "visa64"
-    } else if cfg!(target_arch = "x86") {
+    } else if target_arch == "x86" {
         "visa32"
     } else {
-        unimplemented!("target arch not implemented");
+        unimplemented!("target arch {} not implemented", target_arch);
     };
     println!("cargo:rustc-link-lib={}", lib);
 }
