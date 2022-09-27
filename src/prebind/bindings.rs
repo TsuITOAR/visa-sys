@@ -531,6 +531,13 @@ pub const VI_ASRL_IN_BUF_DISCARD: u32 = 64;
 pub const VI_ASRL_OUT_BUF_DISCARD: u32 = 128;
 pub type va_list = __builtin_va_list;
 pub type __gnuc_va_list = __builtin_va_list;
+
+/// A UInt that is the same size as the target's pointer width
+#[cfg(target_pointer_width = "64")]
+pub type ViUIntPtrSize = ViUInt64;
+#[cfg(not(target_pointer_width = "64"))]
+pub type ViUIntPtrSize = ViUInt32;
+
 pub type ViUInt64 = ::std::os::raw::c_ulonglong;
 pub type ViInt64 = ::std::os::raw::c_longlong;
 pub type ViPUInt64 = *mut ViUInt64;
@@ -602,9 +609,9 @@ pub type ViEvent = ViObject;
 pub type ViPEvent = *mut ViEvent;
 pub type ViFindList = ViObject;
 pub type ViPFindList = *mut ViFindList;
-pub type ViBusAddress = ViUInt64;
-pub type ViBusSize = ViUInt64;
-pub type ViAttrState = ViUInt64;
+pub type ViBusAddress = ViUIntPtrSize;
+pub type ViBusSize = ViUIntPtrSize;
+pub type ViAttrState = ViUIntPtrSize;
 pub type ViBusAddress64 = ViUInt64;
 pub type ViPBusAddress64 = *mut ViBusAddress64;
 pub type ViEventType = ViUInt32;
