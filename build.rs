@@ -19,9 +19,11 @@ fn link_lib() {
 }
 const LIB_PATH_VAR: &str = "LIB_VISA_PATH";
 fn add_link_path() {
+    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+    let prefix = if target_os == "macos" {"framework="} else {""};
     if let Some(p) = env::var_os(LIB_PATH_VAR) {
         p.to_str()
-            .map(|p| println!("cargo:rustc-link-search={}", p))
+            .map(|p| println!("cargo:rustc-link-search={}{}", prefix, p))
             .unwrap_or_else(|| eprintln!("WARN: illegal value of '{}'", LIB_PATH_VAR));
     } else {
         #[cfg(all(target_arch = "x86", target_os = "windows"))]
