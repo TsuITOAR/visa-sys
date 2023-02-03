@@ -4,7 +4,7 @@
 pub const __GNUC_VA_LIST: u32 = 1;
 pub const _VI_ERROR: i32 = -2147483648;
 pub const VI_SUCCESS: u32 = 0;
-pub const VI_NULL: u32 = 0;
+pub const VI_NULL: ViUInt32 = 0;
 pub const VI_TRUE: u32 = 1;
 pub const VI_FALSE: u32 = 0;
 pub const VI_SPEC_VERSION: u32 = 7340288;
