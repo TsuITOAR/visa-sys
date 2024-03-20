@@ -1,5 +1,5 @@
 fn main() {
-    #[cfg(not(docsrs))]
+    #[cfg(not(any(docsrs, feature = "proc")))]
     {
         link_lib();
         add_link_path();
@@ -8,7 +8,7 @@ fn main() {
     bindgen::bindgen();
 }
 
-#[cfg(not(docsrs))]
+#[cfg(not(any(docsrs, feature = "proc")))]
 fn link_lib() {
     use std::env;
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
@@ -24,7 +24,7 @@ fn link_lib() {
     println!("cargo:rustc-link-lib={}", lib);
 }
 
-#[cfg(not(docsrs))]
+#[cfg(not(any(docsrs, feature = "proc")))]
 fn add_link_path() {
     const LIB_PATH_VAR: &str = "LIB_VISA_PATH";
     use std::env;

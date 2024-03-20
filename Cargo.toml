@@ -1,6 +1,6 @@
 [package]
 name = "visa-sys"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["ITOAR <itoar@outlook.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
@@ -8,6 +8,9 @@ repository = "https://github.com/TsuITOAR/visa-sys"
 homepage = "https://github.com/TsuITOAR/visa-sys"
 description = "FFI bind to VISA(Virtual Instrument Software Architecture) library"
 exclude = ["/sample.rs", "/.vscode"]
+
+[features]
+proc = [] #only enabled by visa-rs-proc
 
 [dependencies]
 
