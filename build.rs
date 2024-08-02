@@ -9,32 +9,47 @@ fn main() {
 }
 
 #[cfg(not(any(docsrs, feature = "proc")))]
-fn link_lib() {
+fn default_lib_name() -> &'static str {
     use std::env;
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-    let lib = match (&*target_arch, &*target_os) {
+    match (&*target_arch, &*target_os) {
         ("x86_64", "macos") => "framework=VISA",
+        (_, "linux") => "visa",
         ("x86_64", _) => "visa64",
         ("x86", _) => "visa32",
         _ => {
             unimplemented!("target arch {} not implemented", target_arch)
         }
-    };
-    println!("cargo:rustc-link-lib={}", lib);
+    }
+}
+
+#[cfg(not(any(docsrs, feature = "proc")))]
+fn link_lib() {
+    const LIB_NAME_VAR: &str = "LIB_VISA_NAME";
+    use std::env;
+    if let Some(lib_name) = env::var_os(LIB_NAME_VAR) {
+        if let Some(l) = lib_name.to_str() {
+            println!("cargo:rustc-link-lib={}", l);
+            return;
+        } else {
+            println!("cargo:warning=illegal value of '{}'", LIB_NAME_VAR);
+        }
+    }
+    println!("cargo:rustc-link-lib={}", default_lib_name());
 }
 
 #[cfg(not(any(docsrs, feature = "proc")))]
 fn add_link_path() {
     const LIB_PATH_VAR: &str = "LIB_VISA_PATH";
     use std::env;
-    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-    let prefix = if target_os == "macos" {
-        "framework="
-    } else {
-        ""
-    };
     if let Some(p) = env::var_os(LIB_PATH_VAR) {
+        let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+        let prefix = if target_os == "macos" {
+            "framework="
+        } else {
+            ""
+        };
         match p.to_str() {
             Some(p) => println!("cargo:rustc-link-search={}{}", prefix, p),
             None => println!("cargo:warning=illegal value of '{}'", LIB_PATH_VAR),
