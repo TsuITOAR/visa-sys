@@ -1,4 +1,11 @@
 fn main() {
+    println!("cargo::rerun-if-env-changed=CARGO_CFG_TARGET_ARCH");
+    println!("cargo::rerun-if-env-changed=CARGO_CFG_TARGET_OS");
+    println!("cargo::rerun-if-env-changed=LIB_VISA_NAME");
+    println!("cargo::rerun-if-env-changed=LIB_VISA_PATH");
+    println!("cargo::rerun-if-env-changed=INCLUDE_VISA_PATH");
+    println!("cargo::rerun-if-env-changed=OUT_DIR");
+
     #[cfg(not(any(docsrs, feature = "proc")))]
     {
         link_lib();
