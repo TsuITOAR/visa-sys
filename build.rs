@@ -21,7 +21,7 @@ fn default_lib_name() -> &'static str {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
     match (&*target_arch, &*target_os) {
-        ("x86_64", "macos") => "framework=VISA",
+        ("x86_64" | "aarch64", "macos") => "framework=VISA",
         (_, "linux") => "visa",
         ("x86_64", _) => "visa64",
         ("x86", _) => "visa32",
@@ -72,7 +72,7 @@ fn add_link_path() {
             let search_path = r#"C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Lib_x64\msc"#;
             println!("cargo:rustc-link-search={search_path}");
         }
-        #[cfg(all(target_arch = "x86_64", target_os = "macos"))]
+        #[cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "macos"))]
         {
             let search_path = "framework=/Library/Frameworks";
             println!("cargo:rustc-link-search={search_path}");
