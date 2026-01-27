@@ -72,7 +72,10 @@ fn add_link_path() {
             let search_path = r#"C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Lib_x64\msc"#;
             println!("cargo:rustc-link-search={search_path}");
         }
-        #[cfg(all(any(target_arch = "x86_64", target_arch = "aarch64"), target_os = "macos"))]
+        #[cfg(all(
+            any(target_arch = "x86_64", target_arch = "aarch64"),
+            target_os = "macos"
+        ))]
         {
             let search_path = "framework=/Library/Frameworks";
             println!("cargo:rustc-link-search={search_path}");
