@@ -19,7 +19,8 @@
 #define _VI_FUNCC __fastcall
 #define _VI_FUNCH __fastcall
 #define _VI_SIGNED signed
-#elif (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)) && !defined(_NI_mswin16_) #define _VI_FAR
+#elif (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)) && !defined(_NI_mswin16_)
+#define _VI_FAR
 #define _VI_FUNC __stdcall
 #define _VI_FUNCC __cdecl
 #define _VI_FUNCH __stdcall

@@ -1,6 +1,6 @@
 [package]
 name = "visa-sys"
-version = "0.1.7"
+version = "0.1.8"
 authors = ["ITOAR <itoar@outlook.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
@@ -15,4 +15,4 @@ proc = [] #only enabled by visa-rs-proc
 [dependencies]
 
 [build-dependencies]
-bindgen = { version = "^0.59", optional = true }
+bindgen = { version = "^0.72", optional = true }

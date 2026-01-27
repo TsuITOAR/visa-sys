@@ -58,8 +58,8 @@ mod tests {
                 let open_status = viOpen(
                     defaultRM,
                     &instr_desc as _,
-                    VI_NULL,
-                    VI_NULL,
+                    VI_NULL as _,
+                    VI_NULL as _,
                     &mut instr as _,
                 );
                 if open_status != VI_SUCCESS as _ {

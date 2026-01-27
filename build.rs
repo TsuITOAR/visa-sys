@@ -95,7 +95,7 @@ mod bindgen {
                     .to_str()
                     .expect("path should be valid utf8 string"),
             )
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
             .generate()
             .expect("Unable to generate bindings");
         let out_path = PathBuf::from(env::var("OUT_DIR").expect("'OUT_DIR' should be set"));
