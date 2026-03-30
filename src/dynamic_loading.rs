@@ -16,7 +16,8 @@
 //!
 //! // Option A: let it auto-load on first use
 //! let mut session = 0;
-//! unsafe { viOpenDefaultRM(&mut session as ViPSession); }
+//! let status = unsafe { viOpenDefaultRM(&mut session as ViPSession) };
+//! assert_eq!(status, VI_SUCCESS as ViStatus);
 //!
 //! // Option B: manually initialize before use (with error handling)
 //! if let Err(e) = load_visa_library() {
