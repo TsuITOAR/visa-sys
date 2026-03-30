@@ -5,7 +5,10 @@
 #[cfg(feature = "bindgen")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
-#[cfg(not(feature = "bindgen"))]
+#[cfg(all(not(feature = "bindgen"), feature = "dynamic_load"))]
+include!("./prebind/bindings_dynamic.rs");
+
+#[cfg(all(not(feature = "bindgen"), not(feature = "dynamic_load")))]
 include!("./prebind/bindings.rs");
 
 #[cfg(test)]

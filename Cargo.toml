@@ -11,8 +11,10 @@ exclude = ["/sample.rs", "/.vscode"]
 
 [features]
 proc = [] #only enabled by visa-rs-proc
+dynamic_load = ["dep:libloading"]
 
 [dependencies]
+libloading = { version = "0.8", optional = true }
 
 [build-dependencies]
 bindgen = { version = "^0.72", optional = true }

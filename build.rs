@@ -6,7 +6,7 @@ fn main() {
     println!("cargo::rerun-if-env-changed=INCLUDE_VISA_PATH");
     println!("cargo::rerun-if-env-changed=OUT_DIR");
 
-    #[cfg(not(any(docsrs, feature = "proc")))]
+    #[cfg(not(any(docsrs, feature = "proc", feature = "dynamic_load")))]
     {
         link_lib();
         add_link_path();
@@ -15,7 +15,7 @@ fn main() {
     bindgen::bindgen();
 }
 
-#[cfg(not(any(docsrs, feature = "proc")))]
+#[cfg(not(any(docsrs, feature = "proc", feature = "dynamic_load")))]
 fn default_lib_name() -> &'static str {
     use std::env;
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
@@ -31,7 +31,7 @@ fn default_lib_name() -> &'static str {
     }
 }
 
-#[cfg(not(any(docsrs, feature = "proc")))]
+#[cfg(not(any(docsrs, feature = "proc", feature = "dynamic_load")))]
 fn link_lib() {
     const LIB_NAME_VAR: &str = "LIB_VISA_NAME";
     use std::env;
@@ -46,7 +46,7 @@ fn link_lib() {
     println!("cargo:rustc-link-lib={}", default_lib_name());
 }
 
-#[cfg(not(any(docsrs, feature = "proc")))]
+#[cfg(not(any(docsrs, feature = "proc", feature = "dynamic_load")))]
 fn add_link_path() {
     const LIB_PATH_VAR: &str = "LIB_VISA_PATH";
     use std::env;
@@ -91,16 +91,25 @@ mod bindgen {
     pub fn bindgen() {
         let include_path =
             PathBuf::from(env::var_os(INCLUDE_PATH_VAR).unwrap_or("./include".into()));
-        let bindings = bindgen::Builder::default()
-            .header(
-                include_path
-                    .join("visa.h")
-                    .to_str()
-                    .expect("path should be valid utf8 string"),
-            )
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-            .generate()
-            .expect("Unable to generate bindings");
+        let header = include_path
+            .join("visa.h")
+            .to_str()
+            .expect("path should be valid utf8 string")
+            .to_owned();
+
+        let base = bindgen::Builder::default()
+            .header(header)
+            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()));
+
+        #[cfg(not(feature = "dynamic_load"))]
+        let builder = base;
+
+        #[cfg(feature = "dynamic_load")]
+        let builder = base
+            .dynamic_library_name("LibVisa")
+            .dynamic_link_require_all(true);
+
+        let bindings = builder.generate().expect("Unable to generate bindings");
         let out_path = PathBuf::from(env::var("OUT_DIR").expect("'OUT_DIR' should be set"));
         bindings
             .write_to_file(out_path.join("bindings.rs"))
