@@ -11,6 +11,12 @@ include!("./prebind/bindings_dynamic.rs");
 #[cfg(all(not(feature = "bindgen"), not(feature = "dynamic_load")))]
 include!("./prebind/bindings.rs");
 
+#[cfg(feature = "dynamic_load")]
+mod dynamic_loading;
+
+#[cfg(feature = "dynamic_load")]
+pub use dynamic_loading::*;
+
 #[cfg(test)]
 mod tests {
     use super::*;
