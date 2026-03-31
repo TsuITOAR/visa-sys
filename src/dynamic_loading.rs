@@ -30,6 +30,23 @@ use std::sync::OnceLock;
 
 use super::*;
 
+// When `bindgen` generates the LibVisa struct, va_list parameters are typed as
+// `*mut __va_list_tag` (the platform-specific representation), whereas the
+// cross-platform prebindings use `ViVAList` (= `*mut c_char`).  This macro
+// converts the `ViVAList` parameter to the type LibVisa expects in each case.
+#[cfg(feature = "bindgen")]
+macro_rules! va_list_arg {
+    ($v:expr) => {
+        $v.as_mut_ptr()
+    };
+}
+#[cfg(not(feature = "bindgen"))]
+macro_rules! va_list_arg {
+    ($v:expr) => {
+        $v
+    };
+}
+
 static __LIB_VISA: OnceLock<LibVisa> = OnceLock::new();
 
 fn __default_lib_name() -> &'static str {
@@ -369,57 +386,62 @@ pub unsafe fn viBufRead(vi: ViSession, buf: ViPBuf, cnt: ViUInt32, retCnt: ViPUI
         .viBufRead(vi, buf, cnt, retCnt)
 }
 
+#[allow(unused_mut)]
 pub unsafe fn viVPrintf(
     vi: ViSession,
     writeFmt: ViConstString,
-    params: *mut __va_list_tag,
+    mut params: ViVAList,
 ) -> ViStatus {
     __LIB_VISA
         .get_or_init(__load_default)
-        .viVPrintf(vi, writeFmt, params)
+        .viVPrintf(vi, writeFmt, va_list_arg!(params))
 }
 
+#[allow(unused_mut)]
 pub unsafe fn viVSPrintf(
     vi: ViSession,
     buf: ViPBuf,
     writeFmt: ViConstString,
-    parms: *mut __va_list_tag,
+    mut parms: ViVAList,
 ) -> ViStatus {
     __LIB_VISA
         .get_or_init(__load_default)
-        .viVSPrintf(vi, buf, writeFmt, parms)
+        .viVSPrintf(vi, buf, writeFmt, va_list_arg!(parms))
 }
 
+#[allow(unused_mut)]
 pub unsafe fn viVScanf(
     vi: ViSession,
     readFmt: ViConstString,
-    params: *mut __va_list_tag,
+    mut params: ViVAList,
 ) -> ViStatus {
     __LIB_VISA
         .get_or_init(__load_default)
-        .viVScanf(vi, readFmt, params)
+        .viVScanf(vi, readFmt, va_list_arg!(params))
 }
 
+#[allow(unused_mut)]
 pub unsafe fn viVSScanf(
     vi: ViSession,
     buf: ViConstBuf,
     readFmt: ViConstString,
-    parms: *mut __va_list_tag,
+    mut parms: ViVAList,
 ) -> ViStatus {
     __LIB_VISA
         .get_or_init(__load_default)
-        .viVSScanf(vi, buf, readFmt, parms)
+        .viVSScanf(vi, buf, readFmt, va_list_arg!(parms))
 }
 
+#[allow(unused_mut)]
 pub unsafe fn viVQueryf(
     vi: ViSession,
     writeFmt: ViConstString,
     readFmt: ViConstString,
-    params: *mut __va_list_tag,
+    mut params: ViVAList,
 ) -> ViStatus {
     __LIB_VISA
         .get_or_init(__load_default)
-        .viVQueryf(vi, writeFmt, readFmt, params)
+        .viVQueryf(vi, writeFmt, readFmt, va_list_arg!(params))
 }
 
 pub unsafe fn viIn8(
