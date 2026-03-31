@@ -107,7 +107,8 @@ mod bindgen {
         #[cfg(feature = "dynamic_load")]
         let builder = base
             .dynamic_library_name("LibVisa")
-            .dynamic_link_require_all(true);
+            .dynamic_link_require_all(true)
+            .override_abi(bindgen::Abi::System, "vi.*");
 
         let bindings = builder.generate().expect("Unable to generate bindings");
         let out_path = PathBuf::from(env::var("OUT_DIR").expect("'OUT_DIR' should be set"));
