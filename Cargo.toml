@@ -1,12 +1,16 @@
 [package]
 name = "visa-sys"
-version = "0.1.8"
+version = "0.1.9"
 authors = ["ITOAR <itoar@outlook.com>"]
 edition = "2021"
+# Variadic `extern "system"` functions/fn-pointers (the viPrintf/viScanf family
+# and the dynamic-loading struct fields) were stabilized in Rust 1.93.
+rust-version = "1.93"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/TsuITOAR/visa-sys"
 homepage = "https://github.com/TsuITOAR/visa-sys"
 description = "FFI bind to VISA(Virtual Instrument Software Architecture) library"
+readme = "README.md"
 exclude = ["/sample.rs", "/.vscode"]
 
 [features]

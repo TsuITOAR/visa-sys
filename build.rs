@@ -104,10 +104,20 @@ mod bindgen {
         #[cfg(not(feature = "dynamic_load"))]
         let builder = base;
 
+        // For dynamic loading, restrict generation to the VISA API. Without an
+        // allowlist bindgen also emits function pointers for unrelated symbols
+        // pulled in from system headers (e.g. `__darwin_*` on macOS); with the
+        // generated `LibVisa` resolving every field, those would be required
+        // symbols that no VISA library exports. `require_all(false)` additionally
+        // makes loading tolerant of VISA implementations that omit rarely used
+        // functions — a missing symbol only fails if that function is called.
         #[cfg(feature = "dynamic_load")]
         let builder = base
+            .allowlist_function("vi.*")
+            .allowlist_type("[_]*[Vv]i.*")
+            .allowlist_var("_?VI_.*")
             .dynamic_library_name("LibVisa")
-            .dynamic_link_require_all(true)
+            .dynamic_link_require_all(false)
             .override_abi(bindgen::Abi::System, "vi.*");
 
         let bindings = builder.generate().expect("Unable to generate bindings");
