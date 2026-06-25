@@ -1,3 +1,13 @@
+//! FFI bindings to the VISA (Virtual Instrument Software Architecture) library.
+//!
+//! By default the system VISA library is linked at build time. Enabling the
+//! `dynamic_load` feature instead loads it at run time via `libloading`, so the
+//! same binary can run with or without VISA installed. In that mode the library
+//! auto-loads on the first VISA call (or explicitly via `load_visa_library` /
+//! `load_visa_library_from_path`); the free VISA functions keep identical
+//! signatures in both modes. See the module docs and the crate README for the
+//! initialization model, limitations, and the build-time environment variables
+//! (`LIB_VISA_NAME`, `LIB_VISA_PATH`, `INCLUDE_VISA_PATH`).
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -5,8 +15,17 @@
 #[cfg(feature = "bindgen")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
-#[cfg(not(feature = "bindgen"))]
+#[cfg(all(not(feature = "bindgen"), feature = "dynamic_load"))]
+include!("./prebind/bindings_dynamic.rs");
+
+#[cfg(all(not(feature = "bindgen"), not(feature = "dynamic_load")))]
 include!("./prebind/bindings.rs");
+
+#[cfg(feature = "dynamic_load")]
+mod dynamic_loading;
+
+#[cfg(feature = "dynamic_load")]
+pub use dynamic_loading::*;
 
 #[cfg(test)]
 mod tests {
