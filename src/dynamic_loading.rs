@@ -85,7 +85,10 @@ static __LIB_VISA: OnceLock<LibVisa> = OnceLock::new();
 
 fn __default_lib_name() -> &'static str {
     if cfg!(target_os = "macos") {
-        "VISA.framework/VISA"
+        // `dlopen` does not search the framework directories for a partial
+        // `VISA.framework/VISA` path, so use the absolute install location used
+        // by NI-VISA / Keysight on macOS. Override with load_visa_library_from_path.
+        "/Library/Frameworks/VISA.framework/VISA"
     } else if cfg!(target_os = "windows") {
         if cfg!(target_arch = "x86_64") {
             "visa64.dll"

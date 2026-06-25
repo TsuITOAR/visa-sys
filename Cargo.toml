@@ -1,6 +1,6 @@
 [package]
 name = "visa-sys"
-version = "0.1.9"
+version = "0.1.10"
 authors = ["ITOAR <itoar@outlook.com>"]
 edition = "2021"
 # Variadic `extern "system"` functions/fn-pointers (the viPrintf/viScanf family
@@ -22,3 +22,8 @@ libloading = { version = "0.8", optional = true }
 
 [build-dependencies]
 bindgen = { version = "^0.72", optional = true }
+
+# Build docs with the dynamic-loading API (the richest surface). The build
+# script skips linking under `dynamic_load`, so docs.rs needs no VISA runtime.
+[package.metadata.docs.rs]
+features = ["dynamic_load"]

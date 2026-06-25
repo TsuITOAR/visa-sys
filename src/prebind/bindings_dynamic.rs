@@ -1544,9 +1544,6 @@ fn __sym<'lib, F>(sym: &'lib Result<F, ::libloading::Error>, name: &str) -> &'li
         panic!("VISA function `{name}` is not available in the loaded library: {e}")
     })
 }
-// Thin FFI passthroughs over the loaded library; safety is the C API's and the
-// argument counts come verbatim from VISA.
-#[allow(clippy::missing_safety_doc, clippy::too_many_arguments)]
 impl LibVisa {
     pub unsafe fn new<P>(path: P) -> Result<Self, ::libloading::Error>
     where

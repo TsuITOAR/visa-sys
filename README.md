@@ -1,5 +1,9 @@
 # visa-sys
 
+[![crates.io](https://img.shields.io/crates/v/visa-sys.svg)](https://crates.io/crates/visa-sys)
+[![docs.rs](https://docs.rs/visa-sys/badge.svg)](https://docs.rs/visa-sys)
+[![license](https://img.shields.io/crates/l/visa-sys.svg)](#license)
+
 FFI bindings to the [VISA](https://www.ivifoundation.org/) (Virtual Instrument
 Software Architecture) library.
 
@@ -67,11 +71,6 @@ Default search names: `VISA.framework/VISA` (macOS), `visa64.dll` / `visa32.dll`
   `viQueryf` are unavailable as free functions (a C-variadic function cannot be
   called through a function pointer). Use the explicit-`va_list` variants
   `viVPrintf`, `viVSPrintf`, `viVScanf`, `viVSScanf`, `viVQueryf`.
-
-> Note: regenerating the dynamic bindings with `--features "bindgen dynamic_load"`
-> should be done on Linux or Windows. On macOS `bindgen` prefixes the resolved
-> symbol names with an underscore, which `dlsym` does not expect; the checked-in
-> `src/prebind/bindings_dynamic.rs` uses the portable bare names.
 
 [`libloading`]: https://crates.io/crates/libloading
 

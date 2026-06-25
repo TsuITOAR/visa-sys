@@ -88,6 +88,28 @@ mod bindgen {
     use std::env;
     use std::path::PathBuf;
     const INCLUDE_PATH_VAR: &str = "INCLUDE_VISA_PATH";
+
+    // Forces the dynamic-loading symbol-lookup strings to the bare C function
+    // names. On macOS bindgen otherwise uses the Mach-O mangled name (a leading
+    // underscore), which `dlsym` does not expect; the bare name is correct on
+    // every target, so dynamic bindings regenerated on macOS work at runtime and
+    // match the portable checked-in prebindings.
+    #[cfg(feature = "dynamic_load")]
+    #[derive(Debug)]
+    struct BareLinkNames;
+    #[cfg(feature = "dynamic_load")]
+    impl bindgen::callbacks::ParseCallbacks for BareLinkNames {
+        fn generated_link_name_override(
+            &self,
+            item_info: bindgen::callbacks::ItemInfo<'_>,
+        ) -> Option<String> {
+            match item_info.kind {
+                bindgen::callbacks::ItemKind::Function => Some(item_info.name.to_owned()),
+                _ => None,
+            }
+        }
+    }
+
     pub fn bindgen() {
         let include_path =
             PathBuf::from(env::var_os(INCLUDE_PATH_VAR).unwrap_or("./include".into()));
@@ -113,6 +135,7 @@ mod bindgen {
         // functions — a missing symbol only fails if that function is called.
         #[cfg(feature = "dynamic_load")]
         let builder = base
+            .parse_callbacks(Box::new(BareLinkNames))
             .allowlist_function("vi.*")
             .allowlist_type("[_]*[Vv]i.*")
             .allowlist_var("_?VI_.*")
