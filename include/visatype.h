@@ -91,11 +91,17 @@ typedef ViInt64 _VI_PTR ViPInt64;
 typedef ViInt64 _VI_PTR ViAInt64;
 #endif
 
-typedef unsigned long ViUInt32;
+#if defined(LONG_MAX) && (LONG_MAX > 0x7FFFFFFFL)
+typedef unsigned int        ViUInt32;
+typedef _VI_SIGNED int      ViInt32;
+#else
+typedef unsigned long       ViUInt32;
+typedef _VI_SIGNED long     ViInt32;
+#endif
+
 typedef ViUInt32 _VI_PTR ViPUInt32;
 typedef ViUInt32 _VI_PTR ViAUInt32;
 
-typedef _VI_SIGNED long ViInt32;
 typedef ViInt32 _VI_PTR ViPInt32;
 typedef ViInt32 _VI_PTR ViAInt32;
 

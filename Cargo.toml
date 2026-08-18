@@ -1,6 +1,6 @@
 [package]
 name = "visa-sys"
-version = "0.1.10"
+version = "0.2.0"
 authors = ["ITOAR <itoar@outlook.com>"]
 edition = "2021"
 # Variadic `extern "system"` functions/fn-pointers (the viPrintf/viScanf family
